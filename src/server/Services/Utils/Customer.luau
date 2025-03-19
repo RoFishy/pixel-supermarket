@@ -17,15 +17,6 @@ local Assets = ReplicatedStorage.Assets
 local Customers = Assets.Customers
 
 -- // Params
-type AgentParams = {
-    AgentRadius : number?,
-    AgentHeight : number?,
-    AgentCanJump : boolean?,
-    AgentCanClimb : boolean?,
-    WaypointSpacing : number?,
-    Costs : {}?
-}
-
 export type CustomerParams = {
     WaitingTime : number, -- time before the leave the register to go do whatever the fuck else;
     TimeInLine : number, -- time they wait in line before leaving gg
@@ -52,7 +43,7 @@ local DefaultParams : CustomerParams = {
     TipChance = 0.1 -- 10%
 }
 
-local PathParams : AgentParams = {
+local PathParams : Types.AgentParams = {
     AgentRadius = 2,
     AgentHeight = 10,
     AgentCanJump = false,
@@ -65,7 +56,8 @@ local function GenerateCustomer(Player : Player)
     local RandomFriend = Friends[math.random(1, #Friends)]
     if not RandomFriend then
         warn(`No friend found for user: {Player.Name}`)
-        return
+        RandomFriend = {}
+        RandomFriend.Id = 460220193 -- use my avatar if they have no friends tehee
     end
 
     local NewRig : Model = Customers.Rig:Clone()
@@ -97,7 +89,7 @@ export type Customer = typeof(setmetatable({} :: any, Customer)) & {
     Owner : Player,
     Params : CustomerParams,
     Rig : Model,
-    Basket : {Types.Food},
+    Basket : {Types.Item},
     _janitor : Janitor.Janitor,
 
     MoveTo : (Position : Vector3) -> (),
@@ -106,8 +98,10 @@ export type Customer = typeof(setmetatable({} :: any, Customer)) & {
     LeaveStore : () -> ()
 }
 
-
-function Customer.new(Store : Model?, Owner : Player, Params : CustomerParams?)
+--[[
+    Creates and returns a new Customer object
+]]--
+function Customer.new(Store : Model?, Owner : Player, Params : CustomerParams?) : Customer
    local self : Customer = setmetatable({}, Customer)
 
    self.Store = Store or nil
@@ -159,8 +153,13 @@ function Customer.LeaveStore(self : Customer, ExitPoint : Vector3?)
     
 end
 
+--[[
+    Destroys the customer and cleans up all connections
+]]--
 function Customer.Cleanup(self : Customer)
     self._janitor:Cleanup()
+    self.Customer.Rig:Destroy()
+    self.Customer = nil
 end
 
 return Customer
