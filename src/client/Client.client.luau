@@ -5,7 +5,7 @@ local StartTime = tick()
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- // Utils
-local Utils = ReplicatedStorage:WaitForChild("Modules").Utils
+local Utils = ReplicatedStorage:WaitForChild("Utils")
 local Loader = require(Utils.Loader)
 
 -- // Folders

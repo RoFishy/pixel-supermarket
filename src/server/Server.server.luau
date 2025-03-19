@@ -6,7 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 -- // Utils
-local Utils = ReplicatedStorage.Modules.Utils
+local Utils = ReplicatedStorage.Utils
 local Loader = require(Utils.Loader)
 
 -- // Folders
