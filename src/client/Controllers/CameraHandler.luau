@@ -64,7 +64,7 @@ function CameraHandler:ResetTransparency(Object : Model | BasePart)
         for _, child in Object:GetChildren() do
             if child:IsA("Model") then
                 self:ResetTransparency(child)
-            else
+            elseif child:IsA("BasePart") then
                 child.Transparency = 0
             end
         end
